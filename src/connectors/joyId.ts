@@ -70,6 +70,7 @@ export default class JoyIdConnector extends CKBConnector {
   ): Promise<Transaction> {
     const { address, connectorType } = this.getData();
     let tx = createTransactionFromSkeleton(txSkeleton);
+    console.log('signRawTransaction');
     //@ts-ignore
     let signTx = await signRawTransaction(tx, address);
     return signTx

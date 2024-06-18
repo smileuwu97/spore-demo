@@ -56,6 +56,7 @@ export interface MintSporeModalProps {
     clusterId: string | undefined,
     useCapacityMargin?: boolean,
   ) => Promise<void>;
+  onTestMint: () => Promise<void>;
 }
 
 const useStyles = createStyles((theme) => ({
@@ -185,7 +186,7 @@ const DropdownContainer: React.ForwardRefRenderFunction<
 const DropdownContainerRef = forwardRef(DropdownContainer);
 
 export default function MintSporeModal(props: MintSporeModalProps) {
-  const { defaultClusterId, clusters, onSubmit } = props;
+  const { defaultClusterId, clusters, onSubmit, onTestMint } = props;
   const theme = useMantineTheme();
   const { address, getAnyoneCanPayLock } = useConnect();
   const clipboard = useClipboard();
@@ -254,6 +255,18 @@ export default function MintSporeModal(props: MintSporeModalProps) {
       setLoading(false);
     }
   }, [onSubmit, clusterId, content, useCapacityMargin]);
+
+  const handleTestMint = useCallback(async ()=> {
+    try {
+      setLoading(true);
+      setError(null);
+      await onTestMint();
+      setLoading(false);
+    } catch (err) {
+      setError(err as Error);
+      setLoading(false);
+    }
+  }, [onTestMint]);
 
   const selectableClusters = useMemo(() => {
     const ownerClusters = clusters.filter((cluster) => {
@@ -511,6 +524,13 @@ export default function MintSporeModal(props: MintSporeModalProps) {
             onClick={handleSubmit}
           >
             Mint
+          </Button>
+          <Button
+            className={classes.submit}
+            loading={loading}
+            onClick={handleTestMint}
+          >
+            Test_Mint
           </Button>
         </Group>
       ) : (

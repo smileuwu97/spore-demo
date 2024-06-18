@@ -130,7 +130,9 @@ export const useConnect = () => {
       if (!connector) {
         throw new Error(`Connector ${connectorType} not found`);
       }
+      console.log('signTransaction: ', JSON.stringify(txSkeleton, null, 2));
       const transaction = await connector.signTransaction(txSkeleton);
+      console.log('witness after signed: ', JSON.stringify(transaction.witnesses, null, 2))
       return transaction;
     },
     [connector, connectorType],
